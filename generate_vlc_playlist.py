@@ -94,8 +94,8 @@ def main():
             dest = os.path.join(playlist_output_folder, filename)
             playlist_content = template.render(files_dict=files_dict)
 
-            if not os.path.isdir(dest):
-                print(f"Cannot save to {dest}, folder does not exist")
+            if not os.path.isdir(playlist_output_folder):
+                print(f"Cannot save to {playlist_output_folder}, folder does not exist")
                 return False
 
             with open(dest, "w", encoding="utf-8") as f:
