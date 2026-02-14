@@ -37,7 +37,7 @@ FOLDER_MEDIALIBRARY=$FOLDER_MEDIALIBRARY
 PLAYLIST_OUTPUT_FOLDER=$PLAYLIST_OUTPUT_FOLDER
 URL_DL=$URL_DL
 ALLOWED_EXTENSIONS=$ALLOWED_EXTENSIONS
-$CRON_SCHEDULE root gosu abc python /app/generate_vlc_playlist.py > /dev/stdout 2>&1
+$CRON_SCHEDULE root gosu abc python /app/generate_vlc_playlist.py >> /proc/1/fd/1 2>&1
 EOF
 chmod 0644 /etc/cron.d/playlist-cron
 
