@@ -27,18 +27,19 @@ Setting PUID=$PUID and PGID=$PGID
 mkdir -p "$FOLDER_MEDIALIBRARY" "$PLAYLIST_OUTPUT_FOLDER"
 chown abc:abc /app "$PLAYLIST_OUTPUT_FOLDER"
 
-# Build env file for cron context
-printenv | grep -E '^(FOLDER_MEDIALIBRARY|PLAYLIST_OUTPUT_FOLDER|URL_DL|ALLOWED_EXTENSIONS)=' > /app/env.sh
-sed -i 's/^/export /' /app/env.sh
-chown abc:abc /app/env.sh
-
 # Run once at startup
 gosu abc python /app/generate_vlc_playlist.py
 
 # Setup cron
-echo "$CRON_SCHEDULE gosu abc /bin/sh -c '. /app/env.sh && python /app/generate_vlc_playlist.py' >> /proc/1/fd/1 2>&1" > /etc/cron.d/playlist-cron
+cat > /etc/cron.d/playlist-cron <<EOF
+PATH=/usr/local/bin:/usr/sbin:/usr/bin:/bin
+FOLDER_MEDIALIBRARY=$FOLDER_MEDIALIBRARY
+PLAYLIST_OUTPUT_FOLDER=$PLAYLIST_OUTPUT_FOLDER
+URL_DL=$URL_DL
+ALLOWED_EXTENSIONS=$ALLOWED_EXTENSIONS
+$CRON_SCHEDULE root gosu abc python /app/generate_vlc_playlist.py > /dev/stdout 2>&1
+EOF
 chmod 0644 /etc/cron.d/playlist-cron
-crontab /etc/cron.d/playlist-cron
 
 echo "Cron scheduled: $CRON_SCHEDULE"
 
