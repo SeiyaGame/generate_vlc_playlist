@@ -82,6 +82,17 @@ template = Template(r"""<?xml version="1.0" encoding="UTF-8"?>
 
 
 def main():
+
+    print("Generating vlc playlist")
+
+    if not os.path.isdir(folder_medialibrary) or not os.listdir(folder_medialibrary):
+        print(f"Media folder '{folder_medialibrary}' does not exist or is empty, skipping")
+        return False
+
+    if not os.path.isdir(playlist_output_folder) or not os.access(playlist_output_folder, os.W_OK):
+        print(f"Output folder '{playlist_output_folder}' does not exist or is not writable")
+        return False
+
     for folder in os.listdir(folder_medialibrary):
         base_folder = os.path.join(folder_medialibrary, folder)
 
