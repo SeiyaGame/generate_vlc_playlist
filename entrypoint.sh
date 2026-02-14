@@ -3,14 +3,6 @@
 PUID=${PUID:-1000}
 PGID=${PGID:-1000}
 
-echo "
-──────────────────────────────────
-GID/UID
-──────────────────────────────────
-User uid:    $(id -u abc)
-User gid:    $(id -g abc)
-──────────────────────────────────"
-
 # Adjust abc user/group to match requested PUID/PGID
 if [ "$(id -u abc)" != "$PUID" ]; then
     usermod -o -u "$PUID" abc
@@ -20,8 +12,12 @@ if [ "$(id -g abc)" != "$PGID" ]; then
 fi
 
 echo "
-Setting PUID=$PUID and PGID=$PGID
-"
+──────────────────────────────────
+GID/UID
+──────────────────────────────────
+User uid:    $PUID
+User gid:    $PGID
+──────────────────────────────────"
 
 # Create and fix ownership
 mkdir -p "$FOLDER_MEDIALIBRARY" "$PLAYLIST_OUTPUT_FOLDER"
