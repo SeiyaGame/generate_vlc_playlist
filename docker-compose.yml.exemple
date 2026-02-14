@@ -1,0 +1,16 @@
+services:
+  playlist-generator:
+    build: .
+    container_name: vlc-playlist-generator
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+#      - FOLDER_MEDIALIBRARY=/medialibrary
+#      - PLAYLIST_OUTPUT_FOLDER=/output
+      - URL_DL=https://dl.web.fr/api/public/dl/random_uuid
+#      - ALLOWED_EXTENSIONS=.mkv,.mp4,.mp3,.avi
+      - CRON_SCHEDULE=0 */5 * * *
+    volumes:
+      - /path/to/your/medialibrary:/medialibrary:ro
+      - /path/to/your/playlists:/output

@@ -4,11 +4,12 @@ import urllib.parse
 from jinja2 import Template
 from typing import List, Dict
 
-folder_media = r"S:\medialibrary" # Folder that contains all of you downloaded media
-playlist_output_folder = r"." # Where to save vlc playlist (Default Current directory)
-url_dl = r"https://dl.web.fr/api/public/dl/random_uuid" # Start of public download url
+folder_medialibrary = os.environ.get("FOLDER_MEDIALIBRARY")
+playlist_output_folder = os.environ.get("PLAYLIST_OUTPUT_FOLDER")
+url_dl = os.environ.get("URL_DL")
 
-allowed_extensions = (".mkv", ".mp4", ".mp3", ".avi") # Media content you want to get in your playlist
+allowed_extensions_str = os.environ.get("ALLOWED_EXTENSIONS", ".mkv,.mp4,.mp3,.avi")
+allowed_extensions = tuple(ext.strip() for ext in allowed_extensions_str.split(","))
 
 
 def clean_title(title: str) -> str:
@@ -42,7 +43,7 @@ def generate_file_dict(base_folder: str, base_url: str, max_size: int = -1, late
 
     files_dict = {}
     for index, full_path in enumerate(files):
-        relative_path = os.path.relpath(full_path, folder_media)
+        relative_path = os.path.relpath(full_path, folder_medialibrary)
         url_path = urllib.parse.quote(relative_path.replace("\\", "/"))
         title = clean_title(os.path.splitext(os.path.basename(full_path))[0])
 
@@ -81,8 +82,8 @@ template = Template(r"""<?xml version="1.0" encoding="UTF-8"?>
 
 
 def main():
-    for folder in os.listdir(folder_media):
-        base_folder = os.path.join(folder_media, folder)
+    for folder in os.listdir(folder_medialibrary):
+        base_folder = os.path.join(folder_medialibrary, folder)
 
         playlists = {
             "all": generate_file_dict(base_folder, url_dl),
@@ -102,6 +103,8 @@ def main():
                 f.write(playlist_content)
 
             print(f"Playlist {prefix} for {folder} generated : {filename}")
+
+    return True
 
 
 if __name__ == "__main__":
