@@ -1,6 +1,7 @@
 import os
 import re
 import urllib.parse
+from datetime import datetime
 from jinja2 import Template
 from typing import List, Dict
 
@@ -83,7 +84,8 @@ template = Template(r"""<?xml version="1.0" encoding="UTF-8"?>
 
 def main():
 
-    print("Generating vlc playlist")
+    start = datetime.now()
+    print(f"[{start}] Starting playlist generation")
 
     if not os.path.isdir(folder_medialibrary) or not os.listdir(folder_medialibrary):
         print(f"Media folder '{folder_medialibrary}' does not exist or is empty, skipping")
@@ -115,6 +117,8 @@ def main():
 
             print(f"Playlist {prefix} for {folder} generated : {filename}")
 
+    end = datetime.now()
+    print(f"[{end}] Playlist generation completed in {end - start}")
     return True
 
 
